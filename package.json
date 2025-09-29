@@ -1,0 +1,24 @@
+{
+  "name": "obtener_categoria",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/bchomelab/padelmavida_obtener_categoria.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bchomelab/padelmavida_obtener_categoria/issues"
+  },
+  "homepage": "https://github.com/bchomelab/padelmavida_obtener_categoria#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "node-fetch": "^3.3.2"
+  }
+}

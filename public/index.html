@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Consulta Categoría</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg,#ffffee,#fff);
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #FFF; /* texto blanco crema */
+  }
+
+  .container {
+    background: #004aad; /* color del box */
+    padding: 2rem 3rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    width: 320px;
+  }
+
+  .logo {
+    width: 200px;
+    height: auto;
+    margin-bottom: 0px;
+  }
+
+  h2 {
+    color: #FFF;
+    margin-bottom: 1rem;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.7rem;
+    margin: 0.5rem 0;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+  }
+
+  button {
+    background-color: #38B6FF; /* botón */
+    color: #004aad; /* texto del botón */
+    border: none;
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 0.5rem;
+  }
+
+  button:hover {
+    background-color: #2fa0e3;
+  }
+
+  #resultado {
+    margin-top: 1rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+
+    /* Loader circular */
+  .loader {
+    border: 4px solid #f3f3f3; /* gris claro */
+    border-top: 4px solid #38B6FF; /* color del botón */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 10px auto 0;
+    display: none; /* oculto por defecto */
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .error { color: #FF5252; }
+  .success { color: #FFF; }
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- Logo -->
+  <img src="logo.png" alt="Logo" class="logo">
+
+  <h2>Consulta tu Categoría</h2>
+  <input type="text" id="rut" placeholder="Ej: 11.111.111-1 o 11111111-1">
+  <button onclick="buscar()">Buscar</button>
+  <p id="resultado"></p>
+  <div class="loader" id="loader"></div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
