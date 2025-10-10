@@ -2,107 +2,100 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Consulta Categoría</title>
 <style>
   body {
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg,#ffffee,#fff);
-    height: 100vh;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #FFF;
-    padding: 1rem;
-  }
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ffffee, #fff);
+  /* Mal: altura fija que causa el corte */
+  /* height: 100vh; */
 
-  .container {
-    background: #004aad;
-    padding: 2rem 1.5rem;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    width: 100%;
-    max-width: 360px;
-  }
+  /* Bien: altura mínima que permite crecer si es necesario ✅ */
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #FFF;
+  
+  /* Opcional pero recomendado: añade espacio arriba y abajo */
+  padding: 2rem 0;
+  box-sizing: border-box; /* Asegura que el padding no afecte el tamaño total */
+}
+
+.container {
+  background: #004aad;
+  padding: 2rem 3rem;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  width: 360px;
+  max-width: 90%; /* Buena práctica para pantallas pequeñas */
+}
 
   .logo {
-    width: 180px;
+    width: 200px;
     height: auto;
     margin-bottom: 0.5rem;
+  }
+
+  .club-info {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .club-info h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: #38B6FF;
+  }
+
+  .club-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .club-table td {
+    padding: 0.25rem 0.3rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    font-size: 0.85rem;
+  }
+
+  .copy-btn {
+    background-color: #38B6FF;
+    color: #004aad;
+    border: none;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    font-size: 0.85rem;
+  }
+
+  .copy-btn:hover {
+    background-color: #2fa0e3;
   }
 
   h2 {
     color: #FFF;
     margin-bottom: 1rem;
-    font-size: 1.3rem;
-  }
-
-  .club-info {
-    background: #ffffff22;
-    border: 1px solid #ffffff44;
-    border-radius: 10px;
-    padding: 1rem;
-    color: #fff;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-  }
-
-  .club-info strong {
-    display: block;
-    color: #38B6FF;
-    font-size: 1rem;
-    margin-top: 0.3rem;
-  }
-
-  .copy-btn {
-    background: #38B6FF;
-    color: #004aad;
-    border: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    margin-top: 0.5rem;
-    transition: background 0.3s;
-  }
-
-  .copy-btn:hover {
-    background: #2fa0e3;
-  }
-
-  .input-wrapper {
-    position: relative;
-    width: 100%;
   }
 
   input {
     width: 100%;
-    padding: 0.7rem 2.5rem 0.7rem 0.7rem;
+    padding: 0.7rem;
     margin: 0.5rem 0;
     border-radius: 5px;
     border: none;
     font-size: 1rem;
-    box-sizing: border-box;
-  }
-
-  .clear-btn {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #38B6FF;
-    color: #004aad;
-    border: none;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 1rem;
-    line-height: 1;
-    display: none;
   }
 
   button {
@@ -115,7 +108,6 @@
     cursor: pointer;
     transition: 0.3s;
     margin-top: 0.5rem;
-    width: 100%;
   }
 
   button:hover {
@@ -125,7 +117,7 @@
   #resultado {
     margin-top: 1rem;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   .loader {
@@ -147,40 +139,23 @@
   .error { color: #FF5252; }
   .success { color: #FFF; }
 
-  table {
-    margin-top: 1rem;
+  table.result-table {
     width: 100%;
     border-collapse: collapse;
-    background: #ffffff11;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  th, td {
-    padding: 0.5rem;
-    text-align: left;
+    margin-top: 1rem;
     color: #fff;
   }
 
-  th {
-    background-color: #38B6FF;
-    color: #004aad;
+  table.result-table th, table.result-table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    text-align: left;
   }
 
-  tr:nth-child(even) {
-    background: #ffffff22;
-  }
-
-  @media (max-width: 400px) {
-    .container {
-      padding: 1.5rem 1rem;
-    }
-    h2 {
-      font-size: 1.1rem;
-    }
-    input, button {
-      font-size: 0.9rem;
-    }
+  table.result-table th {
+    color: #38B6FF;
+    text-transform: uppercase;
+    font-size: 0.9rem;
   }
 </style>
 </head>
@@ -188,26 +163,24 @@
 <div class="container">
   <img src="logo.png" alt="Logo" class="logo">
 
+  <!-- 🏦 Info del Club -->
   <div class="club-info">
-    <strong>Cuenta del Club</strong>
-    Banco Estado<br>
-    Chequera Electrónica: <span id="cuenta">43270036563</span><br>
-    Titular: Club Polideportivo Pádelmávida<br>
-    RUT: 65.232.068-6<br>
-    Correo: padelmavida@gmail.com<br>
-    <button class="copy-btn" onclick="copiarCuenta()">Copiar cuenta</button>
+    <h3>Cuenta del Club</h3>
+    <table class="club-table">
+      <tr><td><strong>Banco:</strong></td><td>Banco Estado</td></tr>
+      <tr><td><strong>Chequera Electrónica:</strong></td><td>43270036563</td></tr>
+      <tr><td><strong>Titular:</strong></td><td>Club Polideportivo Pádelmávida</td></tr>
+      <tr><td><strong>RUT:</strong></td><td>65.232.068-6</td></tr>
+      <tr><td><strong>Correo:</strong></td><td>padelmavida@gmail.com</td></tr>
+    </table>
+    <button class="copy-btn" onclick="copiarCuenta()">📋 Copiar Datos</button>
   </div>
 
+  <!-- 📋 Consulta -->
   <h2>Consulta tu Categoría</h2>
-
-  <div class="input-wrapper">
-    <input type="text" id="rut" placeholder="Ej: 11.111.111-1 o 11111111-1">
-    <button class="clear-btn" id="clear-btn" onclick="limpiarInput()">×</button>
-  </div>
-
+  <input type="text" id="rut" placeholder="Ej: 11.111.111-1 o 11111111-1">
   <button onclick="buscar()">Buscar</button>
   <p id="resultado"></p>
-  <div id="tablaResultado"></div>
   <div class="loader" id="loader"></div>
 </div>
 
