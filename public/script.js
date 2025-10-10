@@ -61,6 +61,13 @@ async function buscar() {
     const deudaMultas = datosData?.["Deuda Multas"] ?? "No encontrado";
     const periodoMultas = datosData?.["Periodo Multas"] || "No Encontrado";
     const deudaTotal = datosData?.["Deuda Total"] ?? "No encontrado";
+    var moroso = "";
+
+    if (deudaCuotas !== "No encontrado" && deudaMultas !== "No encontrado") {
+      if (deudaMultas > 0 || deudaCuotas >= 3000) {
+        moroso = "<br><div class=\"club-info\"><h3>Atención!!</h3><p>Su estado como socio se encuentra moroso.</p><p>Si no regulariza puede ser excluido de algunas actividades del club.</p></div>";
+      }
+    }
 
     // === Construir tablas de resultado ===
     resultado.innerHTML = `
@@ -74,6 +81,7 @@ async function buscar() {
         <tr><td><strong>Periodo Multas:</strong></td><td>${periodoMultas}</td></tr>
         <tr style="background: #38B6FF; font-weight: 900; font-size: larger;"><td><strong>Deuda Total:</strong></td><td><strong>$${deudaTotal.toLocaleString()}</strong></td></tr>
       </table>
+      ${moroso}
     `;
     resultado.className = "success";
 
