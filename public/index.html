@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Consulta Categoría</title>
 <style>
   body {
@@ -12,41 +13,101 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #FFF; /* texto blanco crema */
+    color: #FFF;
+    padding: 1rem;
   }
 
   .container {
-    background: #004aad; /* color del box */
-    padding: 2rem 3rem;
+    background: #004aad;
+    padding: 2rem 1.5rem;
     border-radius: 15px;
     text-align: center;
     box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    width: 320px;
+    width: 100%;
+    max-width: 360px;
   }
 
   .logo {
-    width: 200px;
+    width: 180px;
     height: auto;
-    margin-bottom: 0px;
+    margin-bottom: 0.5rem;
   }
 
   h2 {
     color: #FFF;
     margin-bottom: 1rem;
+    font-size: 1.3rem;
+  }
+
+  .club-info {
+    background: #ffffff22;
+    border: 1px solid #ffffff44;
+    border-radius: 10px;
+    padding: 1rem;
+    color: #fff;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .club-info strong {
+    display: block;
+    color: #38B6FF;
+    font-size: 1rem;
+    margin-top: 0.3rem;
+  }
+
+  .copy-btn {
+    background: #38B6FF;
+    color: #004aad;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.3s;
+  }
+
+  .copy-btn:hover {
+    background: #2fa0e3;
+  }
+
+  .input-wrapper {
+    position: relative;
+    width: 100%;
   }
 
   input {
     width: 100%;
-    padding: 0.7rem;
+    padding: 0.7rem 2.5rem 0.7rem 0.7rem;
     margin: 0.5rem 0;
     border-radius: 5px;
     border: none;
     font-size: 1rem;
+    box-sizing: border-box;
+  }
+
+  .clear-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #38B6FF;
+    color: #004aad;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    line-height: 1;
+    display: none;
   }
 
   button {
-    background-color: #38B6FF; /* botón */
-    color: #004aad; /* texto del botón */
+    background-color: #38B6FF;
+    color: #004aad;
     border: none;
     padding: 0.7rem 1.5rem;
     font-size: 1rem;
@@ -54,6 +115,7 @@
     cursor: pointer;
     transition: 0.3s;
     margin-top: 0.5rem;
+    width: 100%;
   }
 
   button:hover {
@@ -63,19 +125,18 @@
   #resultado {
     margin-top: 1rem;
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
-    /* Loader circular */
   .loader {
-    border: 4px solid #f3f3f3; /* gris claro */
-    border-top: 4px solid #38B6FF; /* color del botón */
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #38B6FF;
     border-radius: 50%;
     width: 30px;
     height: 30px;
     animation: spin 1s linear infinite;
     margin: 10px auto 0;
-    display: none; /* oculto por defecto */
+    display: none;
   }
 
   @keyframes spin {
@@ -85,19 +146,71 @@
 
   .error { color: #FF5252; }
   .success { color: #FFF; }
+
+  table {
+    margin-top: 1rem;
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff11;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  th, td {
+    padding: 0.5rem;
+    text-align: left;
+    color: #fff;
+  }
+
+  th {
+    background-color: #38B6FF;
+    color: #004aad;
+  }
+
+  tr:nth-child(even) {
+    background: #ffffff22;
+  }
+
+  @media (max-width: 400px) {
+    .container {
+      padding: 1.5rem 1rem;
+    }
+    h2 {
+      font-size: 1.1rem;
+    }
+    input, button {
+      font-size: 0.9rem;
+    }
+  }
 </style>
 </head>
 <body>
 <div class="container">
-  <!-- Logo -->
   <img src="logo.png" alt="Logo" class="logo">
 
+  <div class="club-info">
+    <strong>Cuenta del Club</strong>
+    Banco Estado<br>
+    Chequera Electrónica: <span id="cuenta">43270036563</span><br>
+    Titular: Club Polideportivo Pádelmávida<br>
+    RUT: 65.232.068-6<br>
+    Correo: padelmavida@gmail.com<br>
+    <button class="copy-btn" onclick="copiarCuenta()">Copiar cuenta</button>
+  </div>
+
   <h2>Consulta tu Categoría</h2>
-  <input type="text" id="rut" placeholder="Ej: 11.111.111-1 o 11111111-1">
+
+  <div class="input-wrapper">
+    <input type="text" id="rut" placeholder="Ej: 11.111.111-1 o 11111111-1">
+    <button class="clear-btn" id="clear-btn" onclick="limpiarInput()">×</button>
+  </div>
+
   <button onclick="buscar()">Buscar</button>
   <p id="resultado"></p>
+  <div id="tablaResultado"></div>
   <div class="loader" id="loader"></div>
 </div>
+
 <script src="script.js"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@ async function buscar() {
   const resultado = document.getElementById("resultado");
   const loader = document.getElementById("loader");
 
-  resultado.textContent = "";
+  resultado.innerHTML = "";
   
   if (!input) {
     resultado.textContent = "Ingresa un RUT";
@@ -11,7 +11,7 @@ async function buscar() {
     return;
   }
 
-  // Funciones de normalización y formateo
+  // === Funciones auxiliares ===
   function normalizeRut(rut) {
     return rut.replace(/\./g, '').toUpperCase().trim();
   }
@@ -19,7 +19,7 @@ async function buscar() {
   function formatRut(rut) {
     rut = rut.replace(/\./g, '').replace('-', '');
     const body = rut.slice(0, -1);
-    const dv = rut.slice(-1);
+    const dv = rut.slice(-1).toUpperCase();
     return body.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "-" + dv;
   }
 
@@ -37,27 +37,59 @@ async function buscar() {
   const cleanRut = normalizeRut(input);
   const formattedRut = formatRut(cleanRut);
 
-  // Mostrar loader
   loader.style.display = "block";
 
   try {
-    const res = await fetch(`/categoria/${encodeURIComponent(formattedRut)}`);
-    const data = await res.json();
+    // === Llamadas paralelas a ambos endpoints ===
+    const [resCat, resDatos] = await Promise.all([
+      fetch(`/categoria/${encodeURIComponent(formattedRut)}`),
+      fetch(`/datos/${encodeURIComponent(formattedRut)}`)
+    ]);
 
-    // Ocultar loader
+    const [categoriaData, datosData] = await Promise.all([
+      resCat.json(),
+      resDatos.json()
+    ]);
+
     loader.style.display = "none";
 
-    if (data.error) {
-      resultado.textContent = data.error;
-      resultado.className = "error";
-    } else {
-      resultado.innerHTML = 'Padelmávida te ha asignado a la categoría: <h4>' + data.categoria + '</h4>';
-      resultado.className = "success";
-    }
-  } catch (e) {
+    // === Si hay errores o no existen datos, usar valores por defecto ===
+    const categoria = categoriaData?.categoria || "No Encontrada";
+    const nombre = datosData?.Nombre || "No Encontrado";
+    const rut = datosData?.Rut || formattedRut;
+    const deudaCuotas = datosData?.["Deuda Cuotas"] ?? "No encontrado";
+    const deudaMultas = datosData?.["Deuda Multas"] ?? "No encontrado";
+    const periodoMultas = datosData?.["Periodo Multas"] || "No Encontrado";
+    const deudaTotal = datosData?.["Deuda Total"] ?? "No encontrado";
+
+    // === Construir tablas de resultado ===
+    resultado.innerHTML = `
+      <h3>Información del Socio</h3>
+      <table class="result-table">
+        <tr><td><strong>Nombre:</strong></td><td>${nombre}</td></tr>
+        <tr><td><strong>RUT:</strong></td><td>${rut}</td></tr>
+        <tr><td><strong>Categoría:</strong></td><td>${categoria}</td></tr>
+        <tr><td><strong>Deuda Cuotas:</strong></td><td>$${deudaCuotas.toLocaleString()}</td></tr>
+        <tr><td><strong>Deuda Multas:</strong></td><td>$${deudaMultas.toLocaleString()}</td></tr>
+        <tr><td><strong>Periodo Multas:</strong></td><td>${periodoMultas}</td></tr>
+        <tr style="background: #38B6FF; font-weight: 900; font-size: larger;"><td><strong>Deuda Total:</strong></td><td><strong>$${deudaTotal.toLocaleString()}</strong></td></tr>
+      </table>
+    `;
+    resultado.className = "success";
+
+  } catch (error) {
     loader.style.display = "none";
-    resultado.textContent = "Error consultando la base de datos";
+    resultado.textContent = "Error al consultar los datos.";
     resultado.className = "error";
-    console.error(e);
+    console.error("❌ Error:", error);
   }
+}
+
+// === Limpiar el input ===
+function limpiarInput() {
+  const input = document.getElementById("rut");
+  const resultado = document.getElementById("resultado");
+  input.value = "";
+  resultado.innerHTML = "";
+  input.focus();
 }
