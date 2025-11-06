@@ -67,9 +67,42 @@ function mostrarTablero(liga) {
   
   if (liga === 'sexta') {
     mostrarSeccion('tablero-sexta');
+    // Mostrar el tab de tablero por defecto
+    mostrarTab('tablero-tab');
     cargarTablero();
   } else {
     alert('Esta opción estará disponible próximamente');
+  }
+}
+
+function mostrarTab(tabId) {
+  // Ocultar todos los tabs
+  document.querySelectorAll('.tab-content').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  
+  // Desactivar todos los botones de tabs
+  document.querySelectorAll('.tab-button').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  // Mostrar el tab seleccionado
+  const tab = document.getElementById(tabId);
+  if (tab) {
+    tab.classList.add('active');
+  }
+  
+  // Activar el botón correspondiente
+  const buttons = document.querySelectorAll('.tab-button');
+  buttons.forEach(btn => {
+    if (btn.getAttribute('onclick') === `mostrarTab('${tabId}')`) {
+      btn.classList.add('active');
+    }
+  });
+  
+  // Si es el tab de rondas, cargar las rondas
+  if (tabId === 'rondas-tab') {
+    cargarRondas();
   }
 }
 

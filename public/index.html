@@ -27,7 +27,7 @@
       
       <div class="dropdown-wrapper">
         <button class="dropdown-button" onclick="toggleDropdown()">
-          Tableros Liga Primavera Verano ▼
+          Liga Primavera Verano 2025-2026 ▼
         </button>
         <div class="dropdown-menu" id="dropdownMenu">
           <div class="dropdown-item" onclick="mostrarTablero('sexta')">Liga Sexta</div>
@@ -71,10 +71,34 @@
 
   <!-- Sección Tablero -->
   <div id="tablero-sexta" class="section">
-    <h2 class="tablero-title">Tablero de Posiciones - Liga Sexta</h2>
-    <div class="tablero-container">
-      <div class="loader" id="loader-tablero"></div>
-      <div id="tablero-content"></div>
+    <h2 class="tablero-title">Liga Sexta - Primavera Verano 2025-2026</h2>
+    
+    <!-- Tabs Navigation -->
+    <div class="tabs-container">
+      <div class="tabs-nav">
+        <button class="tab-button active" onclick="mostrarTab('tablero-tab')">
+          Tablero
+        </button>
+        <button class="tab-button" onclick="mostrarTab('rondas-tab')">
+          Rondas
+        </button>
+      </div>
+      
+      <!-- Tab Content: Tablero -->
+      <div id="tablero-tab" class="tab-content active">
+        <div class="tablero-container">
+          <div class="loader" id="loader-tablero"></div>
+          <div id="tablero-content"></div>
+        </div>
+      </div>
+      
+      <!-- Tab Content: Rondas -->
+      <div id="rondas-tab" class="tab-content">
+        <div class="rondas-container">
+          <div class="loader" id="loader-rondas"></div>
+          <div id="rondas-content"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -132,6 +156,7 @@
 
 <script src="js/navigation.js"></script>
 <script src="js/tablero.js"></script>
+<script src="js/rondas.js"></script>
 <script src="js/consulta.js"></script>
 <script src="js/utils.js"></script>
 </body>

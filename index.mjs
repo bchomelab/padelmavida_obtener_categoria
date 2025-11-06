@@ -157,6 +157,45 @@ app.get("/tablero", async (req, res) => {
 });
 
 /**
+ * 📅 Ruta para obtener todas las rondas y enfrentamientos
+ */
+app.get("/rondas", async (req, res) => {
+  try {
+    const url = `https://script.google.com/macros/s/AKfycbx9laIjtP7GgLbmxfA-ZrfvO7WwLtr9Grtxx0NIc4_GdXmdt7kF84gbvqpjcei6_s4F/exec`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      console.error("❌ Apps Script rondas no respondió:", response.status);
+      return res.json({
+        success: false,
+        error: "Error al obtener las rondas",
+        data: []
+      });
+    }
+
+    const data = await response.json();
+
+    if (!data.success || !data.data) {
+      return res.json({
+        success: false,
+        error: "Datos de rondas no encontrados",
+        data: []
+      });
+    }
+
+    // Las rondas ya vienen ordenadas por número desde el script
+    res.json(data);
+  } catch (error) {
+    console.error("⚠️ Error al obtener rondas:", error.message);
+    res.json({
+      success: false,
+      error: error.message,
+      data: []
+    });
+  }
+});
+
+/**
  * 🚀 Inicio del servidor
  */
 const PORT = process.env.PORT || 3000;
