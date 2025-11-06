@@ -73,16 +73,18 @@ async function buscar() {
 
     // === Construir tablas de resultado ===
     resultado.innerHTML = `
-      <h3>Información del Socio</h3>
-      <table class="result-table">
-        <tr><td><strong>Nombre:</strong></td><td>${nombre}</td></tr>
-        <tr><td><strong>RUT:</strong></td><td>${rut}</td></tr>
-        <tr><td><strong>Categoría:</strong></td><td>${categoria}</td></tr>
-        <tr><td><strong>Deuda Cuotas:</strong></td><td>$${deudaCuotas.toLocaleString()}</td></tr>
-        <tr><td><strong>Deuda Multas:</strong></td><td>$${deudaMultas.toLocaleString()}</td></tr>
-        <tr><td><strong>Periodo Multas:</strong></td><td>${periodoMultas}</td></tr>
-        <tr style="background: #38B6FF; font-weight: 900; font-size: larger;"><td><strong>Deuda Total:</strong></td><td><strong>$${deudaTotal.toLocaleString()}</strong></td></tr>
-      </table>
+      <div class="socio-info">
+        <h3>Información del Socio</h3>
+        <table class="result-table">
+          <tr><td><strong>Nombre:</strong></td><td>${nombre}</td></tr>
+          <tr><td><strong>RUT:</strong></td><td>${rut}</td></tr>
+          <tr><td><strong>Categoría:</strong></td><td>${categoria}</td></tr>
+          <tr><td><strong>Deuda Cuotas:</strong></td><td>$${deudaCuotas.toLocaleString()}</td></tr>
+          <tr><td><strong>Deuda Multas:</strong></td><td>$${deudaMultas.toLocaleString()}</td></tr>
+          <tr><td><strong>Periodo Multas:</strong></td><td>${periodoMultas}</td></tr>
+          <tr class="deuda-total-row"><td><strong>Deuda Total:</strong></td><td><strong>$${deudaTotal.toLocaleString()}</strong></td></tr>
+        </table>
+      </div>
       ${moroso}
     `;
     resultado.className = "success";
@@ -94,4 +96,17 @@ async function buscar() {
     console.error("❌ Error:", error);
   }
 }
+
+// === Event Listener para Enter en el input RUT ===
+document.addEventListener('DOMContentLoaded', function() {
+  const rutInput = document.getElementById('rut');
+  if (rutInput) {
+    rutInput.addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        buscar();
+      }
+    });
+  }
+});
 

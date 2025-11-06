@@ -55,11 +55,12 @@ async function cargarTablero() {
     tablaHTML += '<th class="puntos-header">Puntos</th>';
     tablaHTML += '</tr></thead><tbody>';
     
-    equipos.forEach(equipo => {
+    equipos.forEach((equipo, index) => {
       const pos = parseInt(equipo.POS) || 0;
       const posClass = pos <= 4 ? `pos-${pos}` : '';
+      const top4Class = pos <= 4 ? 'top-4-row' : '';
       
-      tablaHTML += `<tr class="${posClass}">`;
+      tablaHTML += `<tr class="${posClass} ${top4Class}">`;
       tablaHTML += `<td><strong>${formatValue(equipo.POS)}</strong></td>`;
       tablaHTML += `<td><strong>${equipo.Equipo || equipo.Equipo_2 || '0'}</strong></td>`;
       tablaHTML += `<td>${formatValue(equipo.PJ)}</td>`;
@@ -78,8 +79,8 @@ async function cargarTablero() {
     
     tablaHTML += '</tbody></table>';
     
-    // Cerrar el contenedor de scroll de la tabla
-    tablaHTML = '<div class="tabla-scroll-wrapper">' + tablaHTML + '</div>';
+    // Cerrar el contenedor de scroll de la tabla y envolver en tablero-wrapper
+    tablaHTML = '<div class="tablero-wrapper"><div class="tabla-scroll-wrapper">' + tablaHTML + '</div></div>';
     
     // Agregar leyenda de puntos
     tablaHTML += '<div class="leyenda-puntos">';
