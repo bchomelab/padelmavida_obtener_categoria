@@ -336,6 +336,11 @@ async function cargarRondas() {
       rondasHTML += '</div>'; // Cerrar ronda-card
     });
     
+    // Agregar imagen de auspiciadores al final de la última ronda
+    rondasHTML += '<div class="auspiciadores-container">';
+    rondasHTML += '<img src="assets/auspiciadores.png" alt="Auspiciadores" class="auspiciadores-img">';
+    rondasHTML += '</div>';
+    
     content.innerHTML = rondasHTML;
     loader.style.display = 'none';
     

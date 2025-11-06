@@ -226,22 +226,25 @@ h4, h5, h6 {
   gap: 5px;
   justify-content: center;
   align-items: center;
-  width: 40px;
+  width: 50px; /* Aumentado a 50px para dar más espacio horizontal */
   height: 40px;
   transition: all var(--transition-fast);
+  overflow: hidden; /* Asegurar que no haya overflow */
+  box-sizing: border-box;
 }
 
 .hamburger-button span {
   display: block;
-  width: 25px;
-  height: 3px;
+  width: 20px; /* Aumentado de 18px a 20px para que la X se vea completa */
+  height: 2.5px;
   background-color: var(--text-on-dark);
   border-radius: 3px;
   transition: all var(--transition-fast);
+  position: relative;
 }
 
 .hamburger-button.active span:nth-child(1) {
-  transform: rotate(45deg) translate(7px, 7px);
+  transform: rotate(45deg) translate(5px, 5px); /* Aumentado para centrar mejor la X */
 }
 
 .hamburger-button.active span:nth-child(2) {
@@ -249,7 +252,7 @@ h4, h5, h6 {
 }
 
 .hamburger-button.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(7px, -7px);
+  transform: rotate(-45deg) translate(5px, -5px); /* Aumentado para centrar mejor la X */
 }
 
 /* === Navigation Buttons (Design System: Primary Variant with Gradient) === */
@@ -803,8 +806,9 @@ table.result-table th {
   position: relative;
   box-sizing: border-box;
   margin: 0;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  /* En móvil, mostrar scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--sky-blue) var(--navy-blue);
 }
 
 
@@ -813,9 +817,22 @@ table.result-table th {
 }
 
 .tabla-scroll-wrapper::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  display: none;
+  height: 8px;
+  display: block;
+}
+
+.tabla-scroll-wrapper::-webkit-scrollbar-track {
+  background: var(--navy-blue);
+  border-radius: 4px;
+}
+
+.tabla-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: var(--sky-blue);
+  border-radius: 4px;
+}
+
+.tabla-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--sky-blue-hover);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -856,8 +873,8 @@ table.result-table th {
   border-collapse: collapse;
   margin: 0;
   color: var(--text-on-dark);
-  min-width: 900px;
-  table-layout: fixed;
+  min-width: 1000px; /* Ajustado para acomodar todas las columnas con sus anchos específicos */
+  table-layout: fixed; /* Fixed en desktop para mantener anchos consistentes */
   font-family: var(--font-body);
   position: relative;
 }
@@ -884,6 +901,105 @@ table.result-table th {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border-bottom: 2px solid var(--text-on-dark);
+  white-space: nowrap;
+}
+
+/* Anchos específicos para cada columna */
+.tablero-table th:nth-child(1),
+.tablero-table td:nth-child(1) {
+  width: 50px; /* Pos */
+  min-width: 50px;
+  max-width: 50px;
+}
+
+.tablero-table th:nth-child(2),
+.tablero-table td:nth-child(2) {
+  width: auto; /* Ajustar automáticamente al contenido */
+  min-width: 150px; /* Ancho mínimo para mantener legibilidad */
+  max-width: none; /* Sin límite máximo para ajustarse al texto más largo */
+  text-align: left;
+  padding-left: 0.5rem; /* Reducido de 1rem a 0.5rem para ajustarse mejor al contenido */
+  padding-right: 0.5rem; /* Reducido de 1rem a 0.5rem para ajustarse mejor al contenido */
+  white-space: nowrap; /* Evitar saltos de línea */
+  overflow: visible; /* Mostrar todo el texto */
+  text-overflow: clip; /* Mostrar todo el texto sin ellipsis */
+  /* Sticky para mantener visible al hacer scroll horizontal */
+  position: sticky;
+  left: 0; /* Inicio desde el borde izquierdo del div */
+  z-index: 10;
+  background-color: #2a2d4d !important; /* Fondo navy-blue sólido sin transparencia */
+  opacity: 1 !important; /* Asegurar opacidad completa */
+}
+
+.tablero-table th:nth-child(2) {
+  background-color: #2a2d4d !important; /* Fondo navy-blue sólido sin transparencia */
+  opacity: 1 !important;
+  z-index: 11; /* Mayor z-index para el header */
+}
+
+.tablero-table tbody tr td:nth-child(2) {
+  background-color: #2a2d4d !important; /* Fondo navy-blue sólido para todas las filas */
+  opacity: 1 !important;
+}
+
+.tablero-table tbody tr.top-4-row td:nth-child(2) {
+  background-color: #2a2d4d !important; /* Fondo navy-blue sólido para sticky en top-4 */
+  opacity: 1 !important;
+}
+
+.tablero-table tbody tr.pos-1 td:nth-child(2),
+.tablero-table tbody tr.pos-2 td:nth-child(2),
+.tablero-table tbody tr.pos-3 td:nth-child(2),
+.tablero-table tbody tr.pos-4 td:nth-child(2) {
+  background-color: #2a2d4d !important; /* Fondo navy-blue sólido, sin gradientes en sticky */
+  opacity: 1 !important;
+}
+
+.tablero-table tbody tr:hover td:nth-child(2) {
+  background-color: rgba(255, 255, 255, 0.05) !important; /* Fondo hover */
+  opacity: 1 !important;
+}
+
+.tablero-table th:nth-child(3),
+.tablero-table td:nth-child(3),
+.tablero-table th:nth-child(4),
+.tablero-table td:nth-child(4),
+.tablero-table th:nth-child(5),
+.tablero-table td:nth-child(5),
+.tablero-table th:nth-child(6),
+.tablero-table td:nth-child(6) {
+  width: 60px; /* PJ, PG, PE, PP */
+  min-width: 60px;
+  max-width: 60px;
+}
+
+.tablero-table th:nth-child(7),
+.tablero-table td:nth-child(7),
+.tablero-table th:nth-child(8),
+.tablero-table td:nth-child(8),
+.tablero-table th:nth-child(9),
+.tablero-table td:nth-child(9) {
+  width: 70px; /* Set.F, Set.C, Dif.Set */
+  min-width: 70px;
+  max-width: 70px;
+}
+
+.tablero-table th:nth-child(10),
+.tablero-table td:nth-child(10),
+.tablero-table th:nth-child(11),
+.tablero-table td:nth-child(11),
+.tablero-table th:nth-child(12),
+.tablero-table td:nth-child(12) {
+  width: 60px; /* JF, JC, Dif.J */
+  min-width: 60px;
+  max-width: 60px;
+}
+
+.tablero-table th:nth-child(13),
+.tablero-table td:nth-child(13) {
+  width: 80px; /* Puntos */
+  min-width: 80px;
+  max-width: 80px;
 }
 
 .tablero-table td {
@@ -891,6 +1007,7 @@ table.result-table th {
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-on-dark);
+  white-space: nowrap;
 }
 
 .tablero-table tr:hover {
@@ -1022,7 +1139,7 @@ table.result-table th {
   background-clip: text;
   margin-top: 0;
   margin-bottom: var(--spacing-lg);
-  font-size: 1.5rem;
+  font-size: 1rem; /* Ajustado para ser más consistente con la tabla */
   text-align: center;
   font-family: var(--font-heading);
   font-weight: 700;
@@ -1050,7 +1167,7 @@ table.result-table th {
   background-clip: text;
   margin-top: 0;
   margin-bottom: var(--spacing-md);
-  font-size: 1.25rem;
+  font-size: 0.875rem; /* Ajustado para ser más consistente con la tabla */
   font-family: var(--font-heading);
   font-weight: 600;
   text-transform: uppercase;
@@ -1065,12 +1182,15 @@ table.result-table th {
   padding: 0;
   margin: 0;
   font-family: var(--font-body);
+  font-size: 0.875rem; /* Ajustado para ser más consistente con la tabla */
 }
 
 .leyenda-puntos li {
   padding: var(--spacing-sm) 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-on-dark);
+  font-size: 0.875rem; /* Ajustado para ser más consistente con la tabla */
+  line-height: 1.5;
 }
 
 .leyenda-puntos li:last-child {
@@ -1080,6 +1200,7 @@ table.result-table th {
 .leyenda-puntos strong {
   color: var(--text-on-dark);
   font-weight: 600;
+  font-size: 0.875rem; /* Ajustado para ser más consistente con la tabla */
 }
 
 /* === Auspiciadores (Design System: Athletic Variant) === */
@@ -1574,6 +1695,28 @@ table.result-table th {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   width: 100%;
+  /* Scrollbar visible en móvil */
+  scrollbar-width: thin;
+  scrollbar-color: var(--sky-blue) var(--navy-blue);
+}
+
+.enfrentamiento-wrapper::-webkit-scrollbar {
+  height: 8px;
+  display: block;
+}
+
+.enfrentamiento-wrapper::-webkit-scrollbar-track {
+  background: var(--navy-blue);
+  border-radius: 4px;
+}
+
+.enfrentamiento-wrapper::-webkit-scrollbar-thumb {
+  background: var(--sky-blue);
+  border-radius: 4px;
+}
+
+.enfrentamiento-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--sky-blue-hover);
 }
 
 .enfrentamiento-table {
@@ -1581,11 +1724,11 @@ table.result-table th {
   border-collapse: collapse;
   color: var(--text-on-dark);
   font-family: var(--font-body);
-  min-width: 500px;
+  min-width: 440px; /* Reducido de 500px a 440px (60px menos por los 3 sets) */
   background: rgba(255, 255, 255, 0.02);
   border-radius: 0.5rem;
   overflow: hidden;
-  table-layout: fixed;
+  table-layout: fixed; /* Fixed en desktop para mantener anchos consistentes */
 }
 
 .enfrentamiento-table thead {
@@ -1620,6 +1763,8 @@ table.result-table th {
 .enfrentamiento-table th:first-child {
   text-align: left;
   width: 60px;
+  min-width: 60px;
+  max-width: 60px;
 }
 
 .enfrentamiento-table th:nth-child(2) {
@@ -1629,11 +1774,15 @@ table.result-table th {
 .enfrentamiento-table th:nth-child(3),
 .enfrentamiento-table th:nth-child(4),
 .enfrentamiento-table th:nth-child(5) {
-  width: 80px;
+  width: 60px; /* Reducido de 80px a 60px */
+  min-width: 60px;
+  max-width: 60px;
 }
 
 .enfrentamiento-table th:last-child {
   width: 80px;
+  min-width: 80px;
+  max-width: 80px;
 }
 
 .enfrentamiento-table td {
@@ -1648,6 +1797,8 @@ table.result-table th {
 
 .enfrentamiento-table td:first-child {
   width: 60px !important;
+  min-width: 60px !important;
+  max-width: 60px !important;
 }
 
 .enfrentamiento-table td:nth-child(2) {
@@ -1657,11 +1808,15 @@ table.result-table th {
 .enfrentamiento-table td:nth-child(3),
 .enfrentamiento-table td:nth-child(4),
 .enfrentamiento-table td:nth-child(5) {
-  width: 80px !important;
+  width: 60px !important; /* Reducido de 80px a 60px */
+  min-width: 60px !important;
+  max-width: 60px !important;
 }
 
 .enfrentamiento-table td:last-child {
   width: 80px !important;
+  min-width: 80px !important;
+  max-width: 80px !important;
 }
 
 .pareja-cell {
@@ -2199,19 +2354,251 @@ table.result-table th {
     min-width: 250px;
   }
 
-  .enfrentamiento-table {
-    min-width: 400px;
-    font-size: 0.875rem;
-  }
-
-  .enfrentamiento-table th,
-  .enfrentamiento-table td {
-    padding: var(--spacing-sm);
-    font-size: 0.875rem;
-  }
+  /* Enfrentamiento table mobile optimizations - already handled above */
 
   .tabla-scroll-wrapper {
     margin: var(--spacing-sm) 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    position: relative;
+    /* Forzar scroll visible en móvil */
+    scrollbar-width: thin;
+    scrollbar-color: var(--sky-blue) var(--navy-blue);
+  }
+
+  .tabla-scroll-wrapper::-webkit-scrollbar {
+    height: 8px;
+    display: block !important;
+  }
+
+  .tabla-scroll-wrapper::-webkit-scrollbar-track {
+    background: var(--navy-blue);
+    border-radius: 4px;
+  }
+
+  .tabla-scroll-wrapper::-webkit-scrollbar-thumb {
+    background: var(--sky-blue);
+    border-radius: 4px;
+  }
+
+  .tabla-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--sky-blue-hover);
+  }
+
+  /* Tablero table mobile optimizations */
+  .tablero-container {
+    padding: 0;
+    margin: 0;
+  }
+
+  .tabla-scroll-wrapper {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tablero-table {
+    min-width: 700px; /* Mínimo para móvil, pero permitir scroll */
+    font-size: 0.7rem;
+    table-layout: auto; /* Auto en móvil para que las columnas se ajusten al contenido */
+  }
+
+  .tablero-table th {
+    padding: 0.4rem 0.15rem; /* Reducido padding horizontal de 0.3rem a 0.15rem */
+    font-size: 0.65rem;
+    white-space: nowrap;
+    width: auto; /* Ajustar al contenido en móvil */
+    min-width: auto;
+    max-width: none;
+  }
+
+  .tablero-table td {
+    padding: 0.4rem 0.15rem; /* Reducido padding horizontal de 0.3rem a 0.15rem */
+    font-size: 0.7rem;
+    white-space: nowrap;
+    width: auto; /* Ajustar al contenido en móvil */
+    min-width: auto;
+    max-width: none;
+  }
+
+  /* Ajustar anchos de columnas en móvil */
+  .tablero-table th:nth-child(1),
+  .tablero-table td:nth-child(1) {
+    width: auto; /* Ajustar al contenido, pero mantener mínimo */
+    min-width: 40px; /* Ancho mínimo para Pos */
+    max-width: none;
+  }
+
+  .tablero-table th:nth-child(2),
+  .tablero-table td:nth-child(2) {
+    width: auto !important; /* Ajustar automáticamente al contenido en móvil */
+    min-width: 70px; /* Ancho mínimo reducido en móvil */
+    max-width: 90px !important; /* Límite máximo más reducido para ocupar menos espacio */
+    padding-left: 0.2rem; /* Reducido aún más para ajustarse mejor al contenido */
+    padding-right: 0.2rem; /* Reducido aún más para ajustarse mejor al contenido */
+    left: 0; /* Inicio desde el borde izquierdo del div en móvil también */
+    position: sticky;
+    z-index: 10;
+    background-color: #2a2d4d !important; /* Fondo navy-blue sólido sin transparencia */
+    opacity: 1 !important; /* Asegurar opacidad completa */
+    overflow: hidden !important; /* Ocultar texto que excede el ancho */
+    text-overflow: ellipsis !important; /* Mostrar líneas punteadas como en rondas */
+    white-space: nowrap !important; /* Evitar saltos de línea */
+  }
+
+  .tablero-table th:nth-child(2) {
+    background-color: #2a2d4d !important; /* Fondo navy-blue sólido sin transparencia */
+    opacity: 1 !important;
+    z-index: 11;
+  }
+
+  .tablero-table tbody tr td:nth-child(2) {
+    background-color: #2a2d4d !important; /* Fondo navy-blue sólido para todas las filas */
+    opacity: 1 !important;
+  }
+
+  .tablero-table tbody tr.top-4-row td:nth-child(2) {
+    background-color: #2a2d4d !important; /* Fondo navy-blue sólido para sticky en top-4 */
+    opacity: 1 !important;
+  }
+
+  .tablero-table tbody tr.pos-1 td:nth-child(2),
+  .tablero-table tbody tr.pos-2 td:nth-child(2),
+  .tablero-table tbody tr.pos-3 td:nth-child(2),
+  .tablero-table tbody tr.pos-4 td:nth-child(2) {
+    background-color: #2a2d4d !important; /* Fondo navy-blue sólido, sin gradientes en sticky */
+    opacity: 1 !important;
+  }
+
+  .tablero-table tbody tr:hover td:nth-child(2) {
+    background-color: rgba(255, 255, 255, 0.05) !important; /* Fondo hover */
+    opacity: 1 !important;
+  }
+
+  /* Ajustar todas las demás columnas al contenido en móvil */
+  .tablero-table th:nth-child(3),
+  .tablero-table td:nth-child(3),
+  .tablero-table th:nth-child(4),
+  .tablero-table td:nth-child(4),
+  .tablero-table th:nth-child(5),
+  .tablero-table td:nth-child(5),
+  .tablero-table th:nth-child(6),
+  .tablero-table td:nth-child(6),
+  .tablero-table th:nth-child(7),
+  .tablero-table td:nth-child(7),
+  .tablero-table th:nth-child(8),
+  .tablero-table td:nth-child(8),
+  .tablero-table th:nth-child(9),
+  .tablero-table td:nth-child(9),
+  .tablero-table th:nth-child(10),
+  .tablero-table td:nth-child(10),
+  .tablero-table th:nth-child(11),
+  .tablero-table td:nth-child(11),
+  .tablero-table th:nth-child(12),
+  .tablero-table td:nth-child(12),
+  .tablero-table th:nth-child(13),
+  .tablero-table td:nth-child(13) {
+    width: auto !important; /* Ajustar al contenido en móvil */
+    min-width: auto !important;
+    max-width: none !important;
+  }
+
+  /* Enfrentamiento table mobile optimizations */
+  .enfrentamiento-wrapper {
+    margin-bottom: var(--spacing-md);
+    padding: 0;
+  }
+
+  .enfrentamiento-table {
+    min-width: 300px; /* Reducido de 320px a 300px (20px menos por los 3 sets) */
+    font-size: 0.7rem;
+  }
+
+  .enfrentamiento-table th {
+    padding: 0.35rem 0.15rem; /* Reducido padding horizontal de 0.25rem a 0.15rem */
+    font-size: 0.65rem;
+    white-space: nowrap;
+  }
+
+  .enfrentamiento-table th:nth-child(3),
+  .enfrentamiento-table th:nth-child(4),
+  .enfrentamiento-table th:nth-child(5) {
+    width: 45px !important; /* Reducido 10% de 50px a 45px */
+    min-width: 45px !important;
+    max-width: 45px !important;
+  }
+
+  .enfrentamiento-table td {
+    padding: 0.35rem 0.15rem; /* Reducido padding horizontal de 0.25rem a 0.15rem */
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+
+  .enfrentamiento-table td:nth-child(3),
+  .enfrentamiento-table td:nth-child(4),
+  .enfrentamiento-table td:nth-child(5) {
+    width: 45px !important; /* Reducido 10% de 50px a 45px */
+    min-width: 45px !important;
+    max-width: 45px !important;
+  }
+
+  .enfrentamiento-table .status-cell {
+    padding: 0.25rem;
+    width: 50px !important;
+  }
+
+  .enfrentamiento-table .pareja-cell {
+    font-size: 0.65rem;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0.35rem 0.15rem; /* Reducido de 0.2rem a 0.15rem */
+  }
+
+  .enfrentamiento-table .set-cell {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.1rem; /* Reducido de 0.15rem a 0.1rem */
+    width: 45px !important; /* Reducido 10% de 50px a 45px en móvil */
+    min-width: 45px !important;
+    max-width: 45px !important;
+  }
+
+  .enfrentamiento-table .puntos-cell {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.1rem; /* Reducido de 0.15rem a 0.1rem */
+    width: 60px !important;
+  }
+
+  /* Ajustar leyenda en móvil para que coincida con la tabla */
+  .leyenda-puntos {
+    padding: var(--spacing-md);
+    font-size: 0.875rem;
+  }
+
+  .leyenda-puntos h3 {
+    font-size: 0.875rem;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .leyenda-columna h4 {
+    font-size: 0.75rem;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .leyenda-puntos ul {
+    font-size: 0.75rem;
+  }
+
+  .leyenda-puntos li {
+    font-size: 0.75rem;
+    padding: 0.3rem 0;
+  }
+
+  .leyenda-puntos strong {
+    font-size: 0.75rem;
   }
 
   .calendario-container {
