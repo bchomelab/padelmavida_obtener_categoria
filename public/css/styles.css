@@ -2513,7 +2513,7 @@ table.result-table th {
   }
 
   .enfrentamiento-table {
-    min-width: 300px; /* Reducido de 320px a 300px (20px menos por los 3 sets) */
+    min-width: 320px; /* Ajustado para acomodar los nuevos anchos de columnas */
     font-size: 0.7rem;
   }
 
@@ -2523,12 +2523,30 @@ table.result-table th {
     white-space: nowrap;
   }
 
+  .enfrentamiento-table th:first-child {
+    width: 35px !important; /* Reducido de 60px a 35px para dar más espacio a parejas */
+    min-width: 35px !important;
+    max-width: 35px !important;
+    padding: 0.2rem;
+  }
+
+  .enfrentamiento-table th:nth-child(2) {
+    min-width: 132px; /* Aumentado de 120px a 132px (12px adicionales de la columna puntos) */
+    max-width: 162px; /* Aumentado de 150px a 162px (12px adicionales de la columna puntos) */
+  }
+
   .enfrentamiento-table th:nth-child(3),
   .enfrentamiento-table th:nth-child(4),
   .enfrentamiento-table th:nth-child(5) {
-    width: 45px !important; /* Reducido 10% de 50px a 45px */
-    min-width: 45px !important;
-    max-width: 45px !important;
+    width: 40px !important; /* Reducido de 45px a 40px para dar más espacio a parejas */
+    min-width: 40px !important;
+    max-width: 40px !important;
+  }
+
+  .enfrentamiento-table th:last-child {
+    width: 48px !important; /* Reducido 20% de 60px a 48px para dar más espacio a parejas */
+    min-width: 48px !important;
+    max-width: 48px !important;
   }
 
   .enfrentamiento-table td {
@@ -2540,19 +2558,28 @@ table.result-table th {
   .enfrentamiento-table td:nth-child(3),
   .enfrentamiento-table td:nth-child(4),
   .enfrentamiento-table td:nth-child(5) {
-    width: 45px !important; /* Reducido 10% de 50px a 45px */
-    min-width: 45px !important;
-    max-width: 45px !important;
+    width: 40px !important; /* Reducido de 45px a 40px para dar más espacio a parejas */
+    min-width: 40px !important;
+    max-width: 40px !important;
+  }
+
+  .enfrentamiento-table td:last-child {
+    width: 48px !important; /* Reducido 20% de 60px a 48px para dar más espacio a parejas */
+    min-width: 48px !important;
+    max-width: 48px !important;
   }
 
   .enfrentamiento-table .status-cell {
-    padding: 0.25rem;
-    width: 50px !important;
+    padding: 0.2rem;
+    width: 35px !important; /* Reducido de 50px a 35px para dar más espacio a parejas */
+    min-width: 35px !important;
+    max-width: 35px !important;
   }
 
   .enfrentamiento-table .pareja-cell {
     font-size: 0.65rem;
-    max-width: 100px;
+    min-width: 132px; /* Aumentado de 120px a 132px (12px adicionales de la columna puntos) */
+    max-width: 162px; /* Aumentado de 150px a 162px (12px adicionales de la columna puntos) */
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 0.35rem 0.15rem; /* Reducido de 0.2rem a 0.15rem */
@@ -2561,15 +2588,17 @@ table.result-table th {
   .enfrentamiento-table .set-cell {
     font-size: 0.7rem;
     padding: 0.35rem 0.1rem; /* Reducido de 0.15rem a 0.1rem */
-    width: 45px !important; /* Reducido 10% de 50px a 45px en móvil */
-    min-width: 45px !important;
-    max-width: 45px !important;
+    width: 40px !important; /* Reducido de 45px a 40px para dar más espacio a parejas */
+    min-width: 40px !important;
+    max-width: 40px !important;
   }
 
   .enfrentamiento-table .puntos-cell {
     font-size: 0.7rem;
     padding: 0.35rem 0.1rem; /* Reducido de 0.15rem a 0.1rem */
-    width: 60px !important;
+    width: 48px !important; /* Reducido 20% de 60px a 48px para dar más espacio a parejas */
+    min-width: 48px !important;
+    max-width: 48px !important;
   }
 
   /* Ajustar leyenda en móvil para que coincida con la tabla */
