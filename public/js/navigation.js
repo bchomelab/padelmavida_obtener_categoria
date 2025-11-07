@@ -44,6 +44,20 @@ function mostrarSeccion(seccionId) {
     }
   });
   
+  // Si la sección NO es tablero-section, actualizar el nombre del dropdown al texto por defecto
+  if (seccionId !== 'tablero-section') {
+    // Actualizar directamente el elemento al texto por defecto
+    const ligaNombreElement = document.getElementById('liga-actual-nombre');
+    if (ligaNombreElement) {
+      ligaNombreElement.textContent = 'Liga Primavera Verano 2025-2026';
+    }
+  } else {
+    // Si estamos en tablero-section, actualizar el nombre según la liga seleccionada
+    if (typeof actualizarNombreLigaActual === 'function') {
+      actualizarNombreLigaActual();
+    }
+  }
+  
   // Cerrar dropdown si está abierto
   cerrarDropdown();
   
@@ -65,14 +79,51 @@ function mostrarTablero(liga) {
   cerrarDropdown();
   cerrarMobileMenu();
   
-  if (liga === 'sexta') {
-    mostrarSeccion('tablero-sexta');
-    // Mostrar el tab de tablero por defecto
-    mostrarTab('tablero-tab');
-    cargarTablero();
+  // Validar que la liga sea válida usando la función de ligas.js
+  if (typeof esLigaValida === 'function') {
+    if (!esLigaValida(liga)) {
+      console.error(`Liga "${liga}" no es válida.`);
+      return;
+    }
   } else {
-    alert('Esta opción estará disponible próximamente');
+    // Fallback si ligas.js no está cargado
+    const ligasValidas = ['sexta', 'quinta', 'mixto'];
+    if (!ligasValidas.includes(liga)) {
+      console.error(`Liga "${liga}" no es válida. Ligas válidas: ${ligasValidas.join(', ')}`);
+      return;
+    }
   }
+  
+  // Establecer la liga actual usando la función de ligas.js
+  if (typeof establecerLigaActual === 'function') {
+    if (!establecerLigaActual(liga)) {
+      return;
+    }
+  }
+  
+  // Actualizar el nombre de la liga en el dropdown
+  const ligaNombreElement = document.getElementById('liga-actual-nombre');
+  if (ligaNombreElement && typeof obtenerNombreLiga === 'function') {
+    ligaNombreElement.textContent = obtenerNombreLiga(liga);
+  }
+  
+  // Actualizar el título de la sección
+  const tituloElement = document.getElementById('tablero-title');
+  if (tituloElement) {
+    const nombreLiga = (typeof obtenerNombreLiga === 'function') 
+      ? obtenerNombreLiga(liga) 
+      : `Liga ${liga}`;
+    tituloElement.textContent = `${nombreLiga} - Primavera Verano 2025-2026`;
+  }
+  
+  // Mostrar la sección de tablero
+  mostrarSeccion('tablero-section');
+  
+  // Mostrar el tab de tablero por defecto
+  mostrarTab('tablero-tab');
+  
+  // Cargar el tablero de la liga seleccionada
+  cargarTablero(liga);
 }
 
 function mostrarTab(tabId) {
@@ -102,7 +153,17 @@ function mostrarTab(tabId) {
   
   // Si es el tab de rondas, cargar las rondas
   if (tabId === 'rondas-tab') {
-    cargarRondas();
+    // Obtener la liga actual desde ligas.js
+    let liga = (typeof obtenerLigaActual === 'function') 
+      ? obtenerLigaActual() 
+      : null;
+    // Si no hay liga seleccionada, usar la primera disponible como fallback
+    if (!liga && typeof ligasDisponibles !== 'undefined' && ligasDisponibles.length > 0) {
+      liga = ligasDisponibles[0];
+    } else if (!liga) {
+      liga = 'sexta'; // Fallback final
+    }
+    cargarRondas(liga);
   }
 }
 

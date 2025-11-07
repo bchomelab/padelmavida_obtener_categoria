@@ -1,14 +1,30 @@
 // === Funciones para el Tablero de Posiciones ===
 
-async function cargarTablero() {
+// Usar la configuración de ligas desde ligas.js
+// Si no está disponible, usar 'sexta' por defecto
+async function cargarTablero(liga = null) {
+  // Obtener la liga actual desde ligas.js si no se proporciona
+  if (!liga) {
+    liga = (typeof obtenerLigaActual === 'function') ? obtenerLigaActual() : null;
+    // Si no hay liga seleccionada, usar la primera disponible como fallback
+    if (!liga && typeof ligasDisponibles !== 'undefined' && ligasDisponibles.length > 0) {
+      liga = ligasDisponibles[0];
+    } else if (!liga) {
+      liga = 'sexta'; // Fallback final
+    }
+  }
   const loader = document.getElementById('loader-tablero');
   const content = document.getElementById('tablero-content');
+  
+  if (!loader || !content) {
+    return;
+  }
   
   loader.style.display = 'block';
   content.innerHTML = '';
   
   try {
-    const response = await fetch('/tablero');
+    const response = await fetch(`/tablero/${liga}`);
     
     if (!response.ok) {
       throw new Error('Error al obtener el tablero');

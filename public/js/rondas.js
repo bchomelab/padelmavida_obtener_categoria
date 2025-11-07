@@ -1,6 +1,18 @@
 // === Funciones para las Rondas ===
 
-async function cargarRondas() {
+// Usar la configuración de ligas desde ligas.js
+// Si no está disponible, usar 'sexta' por defecto
+async function cargarRondas(liga = null) {
+  // Obtener la liga actual desde ligas.js si no se proporciona
+  if (!liga) {
+    liga = (typeof obtenerLigaActual === 'function') ? obtenerLigaActual() : null;
+    // Si no hay liga seleccionada, usar la primera disponible como fallback
+    if (!liga && typeof ligasDisponibles !== 'undefined' && ligasDisponibles.length > 0) {
+      liga = ligasDisponibles[0];
+    } else if (!liga) {
+      liga = 'sexta'; // Fallback final
+    }
+  }
   const loader = document.getElementById('loader-rondas');
   const content = document.getElementById('rondas-content');
   
@@ -12,7 +24,7 @@ async function cargarRondas() {
   content.innerHTML = '';
   
   try {
-    const response = await fetch('/rondas');
+    const response = await fetch(`/rondas/${liga}`);
     
     if (!response.ok) {
       throw new Error('Error al obtener las rondas');

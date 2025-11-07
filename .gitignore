@@ -32,6 +32,8 @@ build/
 # Google Apps Script (si estás usando clasp)
 .clasp.json
 google-apps-script-tablero-posiciones.js
+google-apps-script-tablero-ejemplo.gs
 INSTRUCCIONES_GOOGLE_APPS_SCRIPT.md
+INSTRUCCIONES_TABLERO_GOOGLE_APPS_SCRIPT.md
 KEEP_ALIVE_INSTRUCCIONES.md
 design_system.md

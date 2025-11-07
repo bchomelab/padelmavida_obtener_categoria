@@ -7,6 +7,65 @@ app.use(cors());
 app.use(express.static("public"));
 
 /**
+ * 🏆 Configuración de Ligas
+ * Cada liga tiene su propio Google Apps Script para tablero y rondas
+ * Para agregar una nueva liga, simplemente añade un nuevo objeto aquí
+ */
+const LIGAS_CONFIG = {
+  sexta: {
+    nombre: "Liga Sexta",
+    tablero: "https://script.google.com/macros/s/AKfycbznOVFz5Mlwjbv71Z5DEoqh0_0xjcmFh-_UQTbC5bKocq7q0MRrl3uwzFxQs1hE34_O/exec",
+    rondas: "https://script.google.com/macros/s/AKfycbx9laIjtP7GgLbmxfA-ZrfvO7WwLtr9Grtxx0NIc4_GdXmdt7kF84gbvqpjcei6_s4F/exec"
+  },
+  quinta: {
+    nombre: "Liga Quinta",
+    // TODO: Reemplazar con las URLs reales de Google Apps Script para Liga Quinta
+    tablero: "https://script.google.com/macros/s/AKfycbyv9d7fqnyc8w5q5q9jS2RZNL3Ji5lTrh2xuuvku0I8NSTEZj8KGBGlqBsDJAXDROfK/exec",
+    rondas: "https://script.google.com/macros/s/AKfycbyukrnsJ8Rlp1IViqGL2cypogc-XC-SQMpJJB6pGjJ2kCwwRfiyty5cFznG6O4RdbnM/exec"
+  },
+  mixto: {
+    nombre: "Liga Mixto",
+    // TODO: Reemplazar con las URLs reales de Google Apps Script para Liga Mixto
+    tablero: "https://script.google.com/macros/s/AKfycbxfmDJ-Km4dxfQsqx9f3u1mQ6DgZDZ3CyiZMRXYSERTAiT2-Drg4vugvFQxJUAQFe4BdA/exec",
+    rondas: "https://script.google.com/macros/s/AKfycbyiE7PyZo0KIQfbP2SFMTTHPjKTfz5vVt8ZDwHbUlcM5sTff6ueDQSNwJQ8HG4u_X1fbg/exec"
+  }
+};
+
+/**
+ * 🔍 Función auxiliar para validar y obtener configuración de liga
+ */
+function obtenerConfigLiga(liga) {
+  const ligaNormalizada = liga?.toLowerCase();
+  
+  if (!ligaNormalizada || !LIGAS_CONFIG[ligaNormalizada]) {
+    return null;
+  }
+  
+  return LIGAS_CONFIG[ligaNormalizada];
+}
+
+/**
+ * 📋 Endpoint para obtener la configuración de ligas disponibles
+ * Devuelve solo los nombres y claves, sin las URLs por seguridad
+ */
+app.get("/ligas", (req, res) => {
+  const ligasInfo = {};
+  
+  for (const [clave, config] of Object.entries(LIGAS_CONFIG)) {
+    ligasInfo[clave] = {
+      nombre: config.nombre,
+      clave: clave
+    };
+  }
+  
+  res.json({
+    success: true,
+    ligas: ligasInfo,
+    ligasDisponibles: Object.keys(LIGAS_CONFIG)
+  });
+});
+
+/**
  * 🔹 Función auxiliar para manejar errores y valores por defecto
  */
 function datosPorDefecto(tipo) {
@@ -110,18 +169,28 @@ app.get("/ping", (req, res) => {
 });
 
 /**
- * 🏆 Ruta para obtener el tablero de posiciones
+ * 🏆 Función auxiliar para obtener el tablero de posiciones
  */
-app.get("/tablero", async (req, res) => {
+async function obtenerTablero(liga, res) {
+  const config = obtenerConfigLiga(liga);
+
+  if (!config) {
+    return res.status(400).json({
+      success: false,
+      error: `Liga "${liga}" no encontrada. Ligas disponibles: ${Object.keys(LIGAS_CONFIG).join(", ")}`,
+      data: []
+    });
+  }
+
   try {
-    const url = `https://script.google.com/macros/s/AKfycbznOVFz5Mlwjbv71Z5DEoqh0_0xjcmFh-_UQTbC5bKocq7q0MRrl3uwzFxQs1hE34_O/exec`;
+    const url = config.tablero;
     const response = await fetch(url);
 
     if (!response.ok) {
-      console.error("❌ Apps Script tablero no respondió:", response.status);
+      console.error(`❌ Apps Script tablero (${liga}) no respondió:`, response.status);
       return res.json({
         success: false,
-        error: "Error al obtener el tablero de posiciones",
+        error: `Error al obtener el tablero de posiciones de ${config.nombre}`,
         data: []
       });
     }
@@ -131,7 +200,7 @@ app.get("/tablero", async (req, res) => {
     if (!data.success || !data.data) {
       return res.json({
         success: false,
-        error: "Datos del tablero no encontrados",
+        error: `Datos del tablero de ${config.nombre} no encontrados`,
         data: []
       });
     }
@@ -147,28 +216,54 @@ app.get("/tablero", async (req, res) => {
 
     res.json(data);
   } catch (error) {
-    console.error("⚠️ Error al obtener tablero de posiciones:", error.message);
+    console.error(`⚠️ Error al obtener tablero de ${config.nombre}:`, error.message);
     res.json({
       success: false,
       error: error.message,
       data: []
     });
   }
+}
+
+/**
+ * 🏆 Ruta para obtener el tablero de posiciones (con parámetro de liga)
+ * Ejemplo: /tablero/sexta, /tablero/quinta, /tablero/mixto
+ */
+app.get("/tablero/:liga", async (req, res) => {
+  const liga = req.params.liga;
+  return obtenerTablero(liga, res);
 });
 
 /**
- * 📅 Ruta para obtener todas las rondas y enfrentamientos
+ * 🏆 Ruta para obtener el tablero de posiciones (compatibilidad hacia atrás - usa sexta por defecto)
  */
-app.get("/rondas", async (req, res) => {
+app.get("/tablero", async (req, res) => {
+  return obtenerTablero("sexta", res);
+});
+
+/**
+ * 📅 Función auxiliar para obtener todas las rondas y enfrentamientos
+ */
+async function obtenerRondas(liga, res) {
+  const config = obtenerConfigLiga(liga);
+
+  if (!config) {
+    return res.status(400).json({
+      success: false,
+      error: `Liga "${liga}" no encontrada. Ligas disponibles: ${Object.keys(LIGAS_CONFIG).join(", ")}`,
+      data: []
+    });
+  }
+
   try {
-    const url = `https://script.google.com/macros/s/AKfycbx9laIjtP7GgLbmxfA-ZrfvO7WwLtr9Grtxx0NIc4_GdXmdt7kF84gbvqpjcei6_s4F/exec`;
+    const url = config.rondas;
     const response = await fetch(url);
 
     if (!response.ok) {
-      console.error("❌ Apps Script rondas no respondió:", response.status);
+      console.error(`❌ Apps Script rondas (${liga}) no respondió:`, response.status);
       return res.json({
         success: false,
-        error: "Error al obtener las rondas",
+        error: `Error al obtener las rondas de ${config.nombre}`,
         data: []
       });
     }
@@ -178,7 +273,7 @@ app.get("/rondas", async (req, res) => {
     if (!data.success || !data.data) {
       return res.json({
         success: false,
-        error: "Datos de rondas no encontrados",
+        error: `Datos de rondas de ${config.nombre} no encontrados`,
         data: []
       });
     }
@@ -186,13 +281,29 @@ app.get("/rondas", async (req, res) => {
     // Las rondas ya vienen ordenadas por número desde el script
     res.json(data);
   } catch (error) {
-    console.error("⚠️ Error al obtener rondas:", error.message);
+    console.error(`⚠️ Error al obtener rondas de ${config.nombre}:`, error.message);
     res.json({
       success: false,
       error: error.message,
       data: []
     });
   }
+}
+
+/**
+ * 📅 Ruta para obtener todas las rondas y enfrentamientos (con parámetro de liga)
+ * Ejemplo: /rondas/sexta, /rondas/quinta, /rondas/mixto
+ */
+app.get("/rondas/:liga", async (req, res) => {
+  const liga = req.params.liga;
+  return obtenerRondas(liga, res);
+});
+
+/**
+ * 📅 Ruta para obtener todas las rondas y enfrentamientos (compatibilidad hacia atrás - usa sexta por defecto)
+ */
+app.get("/rondas", async (req, res) => {
+  return obtenerRondas("sexta", res);
 });
 
 /**

@@ -52,12 +52,10 @@
       
       <div class="dropdown-wrapper">
         <button class="dropdown-button" onclick="toggleDropdown()">
-          Liga Primavera Verano 2025-2026 ▼
+          <span id="liga-actual-nombre">Liga Primavera Verano 2025-2026</span> ▼
         </button>
         <div class="dropdown-menu" id="dropdownMenu">
-          <div class="dropdown-item" onclick="mostrarTablero('sexta')">Liga Sexta</div>
-          <div class="dropdown-item disabled">Liga Quinta</div>
-          <div class="dropdown-item disabled">Liga Mixto</div>
+          <!-- Las ligas se cargarán dinámicamente desde /ligas -->
         </div>
       </div>
 
@@ -94,9 +92,9 @@
     <div class="loader" id="loader"></div>
   </div>
 
-  <!-- Sección Tablero -->
-  <div id="tablero-sexta" class="section">
-    <h2 class="tablero-title">Liga Sexta - Primavera Verano 2025-2026</h2>
+  <!-- Sección Tablero (dinámica para todas las ligas) -->
+  <div id="tablero-section" class="section">
+    <h2 class="tablero-title" id="tablero-title">Cargando...</h2>
     
     <!-- Tabs Navigation -->
     <div class="tabs-container">
@@ -179,8 +177,9 @@
   </div>
 </footer>
 
-<script src="js/navigation.js"></script>
+<script src="js/ligas.js"></script>
 <script src="js/tablero.js"></script>
+<script src="js/navigation.js"></script>
 <script src="js/rondas.js"></script>
 <script src="js/consulta.js"></script>
 <script src="js/utils.js"></script>
